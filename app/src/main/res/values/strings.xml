@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">EasyStay</string>
+    <string name="default_web_client_id">531233063406-07im406ofrv1ek0tilphdb9tmfvdh8eo.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">1650645932316856</string>
+    <string-array name="sort_options">
+        <item>Giá tăng dần</item>
+        <item>Giá giảm dần</item>
+    </string-array>
+    <string-array name="filter_star_options">
+        <item>Tất cả</item>
+        <item>1 sao</item>
+        <item>2 sao</item>
+        <item>3 sao</item>
+        <item>4 sao</item>
+        <item>5 sao</item>
+    </string-array>
+    <string name="client_token">8da7680f2df20b5db3cea7e1f0e0faa8</string>
+    <string-array name="gender_array">
+        <item>Nam</item>
+        <item>Nữ</item>
+        <item>Khác</item>
+    </string-array>
+</resources>

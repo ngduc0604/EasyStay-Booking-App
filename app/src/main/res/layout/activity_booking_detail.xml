@@ -1,0 +1,125 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/blue500"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/back_to_history"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/ic_back_white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/tvHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chi tiết đơn đặt"
+            android:textSize="20sp"
+            android:layout_marginLeft="90dp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/detail_booking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imgHotelDetail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/img_hue"/>
+
+        <TextView
+            android:id="@+id/tvDetailHotelName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/blue500"
+            android:text="Wave Sound Beach House Phu Quoc"/>
+
+        <TextView
+            android:id="@+id/tvDetailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Hẻm 83 Đường Nguyễn Văn Trỗi, Duong Dong, Phú Quốc, Việt Nam"/>
+
+        <TextView
+            android:id="@+id/tvDetailDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="20/07/2025"/>
+        <TextView
+            android:id="@+id/tv_Booking_Date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="20/07/2025"/>
+        <TextView
+            android:id="@+id/tv_User_Booking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nguyen Van Duc"/>
+        <TextView
+            android:id="@+id/tvDetailTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textColor="#FF0000"
+            android:text="4,614,888 ₫"/>
+        <TextView
+            android:id="@+id/tvstatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textColor="#FF0000"
+            android:text="4,614,888 ₫"/>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:text="Hủy đặt phòng"
+        android:textColor="#FF0000"
+        android:backgroundTint="@color/white"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+    </Button>
+    <Button
+        android:id="@+id/btn_danhgia"
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:text="Đánh giá"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/blue500"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+    </Button>
+</LinearLayout>

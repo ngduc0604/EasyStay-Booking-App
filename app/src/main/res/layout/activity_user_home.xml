@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Header cố định -->
+    <include
+        android:id="@+id/layout_header"
+        layout="@layout/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Bottom Navigation cố định -->
+    <include
+        android:id="@+id/layout_bottom_nav"
+        layout="@layout/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <ScrollView
+        android:contentDescription="scroll_content"
+        android:id="@+id/scroll_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/layout_header"
+        app:layout_constraintBottom_toTopOf="@id/layout_bottom_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include layout="@layout/search_box" android:id="@+id/searchBox"></include>
+            <TextView
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đi nhiều hơn, trả ít hơn"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingStart="15dp"
+                android:paddingTop="10dp" />
+<!--            Scroll ngang đi nhiều hơn ưu đãi nhiều hơn-->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingTop="8dp"
+                android:layout_marginLeft="1dp"
+                android:paddingBottom="8dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="7dp"
+                    android:layout_marginLeft="10dp">
+                    <!-- Thẻ Genius -->
+                    <LinearLayout
+                        android:layout_width="200dp"
+                        android:layout_height="130dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/border_geniust"
+                        android:padding="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Genius"
+                            android:textColor="#FFEB3B"
+                            android:textStyle="bold"
+                            android:textSize="18sp"/>
+                        <TextView
+                            android:id="@+id/tv_genius"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Văn Đức ơi, bạn đang là Genius Cấp 1 trong chương trình khách hàng thân thiết của chúng tôi"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:paddingTop="4dp"/>
+                    </LinearLayout>
+                    <!-- Thẻ Giảm giá -->
+                    <LinearLayout
+                        android:layout_width="200dp"
+                        android:layout_height="130dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_border_gray"
+                        android:padding="12dp"
+                        android:layout_marginEnd="8dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:text="Giảm giá 10% cho chỗ nghỉ"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold"
+                                android:textSize="16sp"/>
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@drawable/ic_percent">
+                            </ImageView>
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tận hưởng giảm giá tại các chỗ nghỉ tham gia trên toàn cầu"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:paddingTop="4dp"/>
+                    </LinearLayout>
+                    <!-- Thẻ Giảm giá xe-->
+                    <LinearLayout
+                        android:layout_width="200dp"
+                        android:layout_height="130dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_border_gray"
+                        android:padding="12dp"
+                        android:layout_marginEnd="8dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:text="Giảm giá 10% cho xe thuê"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold"
+                                android:textSize="16sp"/>
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@drawable/ic_car">
+                            </ImageView>
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tiết kiệm cho một số xe thuê"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:paddingTop="5dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+                <!--Lich su tim kiem-->
+            <LinearLayout
+                android:id="@+id/layout_last_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="#000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tiếp tục tìm kiếm của bạn"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp" />
+                <LinearLayout
+                    android:id="@+id/continue_search"
+                    android:layout_margin="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/search_his_border"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/image_last_search"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"
+                        android:background="@drawable/bg_image_rounded"
+                        android:src="@drawable/img_hcm">
+                    </ImageView>
+                    <LinearLayout
+                        android:padding="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tv_last_search_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TH HCM"
+                            android:textStyle="italic"/>
+                        <TextView
+                            android:id="@+id/tv_last_search_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="25-30-6"
+                            android:textStyle="italic"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+
+               <!--End Lich su tim kiem-->
+
+<!--            Text view khu vực-->
+            <!-- Ưu đãi -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Tiêu đề ưu đãi -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ưu đãi"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="4dp" />
+
+                <!-- Mô tả -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khuyến mãi, giảm giá và ưu đãi đặc biệt dành riêng cho bạn"
+                    android:textSize="14sp"
+                    android:textColor="#444444"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Khung ưu đãi -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_offer_box"
+                    android:elevation="2dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Nội dung text -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kỳ nghỉ ngắn ngày chất lượng"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tiết kiệm đến 20% với Ưu Đãi Mùa Du Lịch"
+                            android:textSize="14sp"
+                            android:textColor="#555555"
+                            android:layout_marginTop="4dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Săn ưu đãi"
+                            android:textSize="14sp"
+                            android:textColor="#007bff"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
+
+                    <!-- Ảnh -->
+                    <ImageView
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:src="@drawable/img_hue"
+                        android:scaleType="centerCrop"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/bg_image_rounded"
+                        android:clipToOutline="true"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:textColor="#000000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hot trong tháng"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingStart="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="4dp" />
+            <!-- Scroll ngang hiển thị khu vực -->
+            <HorizontalScrollView
+                android:contentDescription="Hot Trong Tháng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/imageContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp" />
+            </HorizontalScrollView>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
