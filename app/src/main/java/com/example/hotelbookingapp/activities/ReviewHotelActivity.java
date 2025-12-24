@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -24,6 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -153,8 +155,10 @@ public class ReviewHotelActivity extends AppCompatActivity {
 
                         ref.update(updates)
                                 .addOnSuccessListener(unused -> {
-                                    Toast.makeText(this, "Đã cập nhật đánh giá.", Toast.LENGTH_SHORT).show();
+                                    recalculateHotelRating(hotelId);
+                                    Toast.makeText(this, "Đã cập nhật đánh giá."+hotelId, Toast.LENGTH_SHORT).show();
                                     sendResultAndFinish(star, content, false, docId);
+
                                 })
                                 .addOnFailureListener(e -> {
                                     btnSubmit.setEnabled(true);
@@ -174,6 +178,7 @@ public class ReviewHotelActivity extends AppCompatActivity {
 
                         ref.set(data)
                                 .addOnSuccessListener(unused -> {
+                                    recalculateHotelRating(hotelId);
                                     Toast.makeText(this, "Đã gửi đánh giá. Cảm ơn bạn!", Toast.LENGTH_SHORT).show();
                                     sendResultAndFinish(star, content, false, docId);
                                 })
@@ -215,6 +220,7 @@ public class ReviewHotelActivity extends AppCompatActivity {
         db.collection("ReviewHotel").document(docId)
                 .delete()
                 .addOnSuccessListener(unused -> {
+                    recalculateHotelRating(hotelId);
                     Toast.makeText(this, "Đã xóa đánh giá.", Toast.LENGTH_SHORT).show();
                     // Thông báo về màn trước để refresh
                     sendResultAndFinish(0f, null, true, docId);
@@ -263,4 +269,42 @@ public class ReviewHotelActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
+    private void recalculateHotelRating(String hotelId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("ReviewHotel")
+                .whereEqualTo("hotelid", hotelId)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+
+                    int ratingCount = querySnapshot.size();
+                    double totalStar = 0.0;
+
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        Double star = doc.getDouble("star");
+                        if (star != null) {
+                            totalStar += star;
+                        }
+                    }
+
+                    double rating = 0.0;
+                    if (ratingCount > 0) {
+                        double avgStar = totalStar / ratingCount; // 0–5
+                        rating = Math.round(avgStar * 2 * 10) / 10.0; // 0–10, 1 decimal
+                    }
+
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("rating", rating);
+                    updates.put("ratingCount", ratingCount);
+
+                    db.collection("hotels")
+                            .document(hotelId)
+                            .update(updates);
+                })
+                .addOnFailureListener(e ->
+                        Log.e("HotelRating", "Recalculate rating failed", e)
+                );
+    }
+
 }

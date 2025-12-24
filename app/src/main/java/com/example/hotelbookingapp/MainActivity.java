@@ -3,7 +3,6 @@ package com.example.hotelbookingapp;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,12 +13,10 @@ import com.example.hotelbookingapp.activities.UserHomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -30,13 +27,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Scanner;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -47,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        //uploadHotelsFromAssets(this);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateCompletedBookings();
+        //uploadHotelsFromAssets(this);
         if (currentUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -94,61 +89,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    public void uploadHotelsFromAssets(Context context) {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        try {
-//            InputStream is = context.getAssets().open("hotels.json");
-//            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-//            StringBuilder sb = new StringBuilder();
-//            String line;
-//            while ((line = br.readLine()) != null) {
-//                sb.append(line);
-//            }
-//            br.close();
-//            is.close();
-//
-//            JSONObject root = new JSONObject(sb.toString());
-//            JSONObject hotels = root.getJSONObject("hotels");
-//            Iterator<String> keys = hotels.keys();
-//            int total = 0;
-//
-//            while (keys.hasNext()) {
-//                String docId = keys.next();
-//                JSONObject hotelObj = hotels.getJSONObject(docId);
-//                Map<String, Object> data = new HashMap<>();
-//
-//                Iterator<String> fieldKeys = hotelObj.keys();
-//                while (fieldKeys.hasNext()) {
-//                    String field = fieldKeys.next();
-//                    Object value = hotelObj.get(field);
-//
-//                    if (value instanceof JSONArray) {
-//                        JSONArray jsonArray = (JSONArray) value;
-//                        List<Object> list = new ArrayList<>();
-//                        for (int i = 0; i < jsonArray.length(); i++) {
-//                            list.add(jsonArray.get(i));
-//                        }
-//                        data.put(field, list);
-//                    } else {
-//                        data.put(field, value);
-//                    }
-//                }
-//
-//                db.collection("hotels")
-//                        .document(docId)
-//                        .set(data)
-//                        .addOnSuccessListener(aVoid -> Log.d("UploadHotels", "Uploaded: " + docId))
-//                        .addOnFailureListener(e -> Log.e("UploadHotels", "Failed: " + docId, e));
-//
-//                total++;
-//            }
-//
-//            Toast.makeText(context, "Đã bắt đầu upload " + total + " khách sạn", Toast.LENGTH_SHORT).show();
-//
-//        } catch (Exception e) {
-//            Log.e("UploadHotels", "Lỗi khi upload", e);
-//            Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
-//        }
-//    }
+    public void uploadHotelsFromAssets(Context context) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        try {
+            InputStream is = context.getAssets().open("hotels.json");
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+            is.close();
+
+            JSONObject root = new JSONObject(sb.toString());
+            JSONObject hotels = root.getJSONObject("hotels");
+            Iterator<String> keys = hotels.keys();
+            int total = 0;
+
+            while (keys.hasNext()) {
+                String docId = keys.next();
+                JSONObject hotelObj = hotels.getJSONObject(docId);
+                Map<String, Object> data = new HashMap<>();
+
+                Iterator<String> fieldKeys = hotelObj.keys();
+                while (fieldKeys.hasNext()) {
+                    String field = fieldKeys.next();
+                    Object value = hotelObj.get(field);
+
+                    if (value instanceof JSONArray) {
+                        JSONArray jsonArray = (JSONArray) value;
+                        List<Object> list = new ArrayList<>();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            list.add(jsonArray.get(i));
+                        }
+                        data.put(field, list);
+                    } else {
+                        data.put(field, value);
+                    }
+                }
+
+                db.collection("hotels")
+                        .document(docId)
+                        .set(data)
+                        .addOnSuccessListener(aVoid -> Log.d("UploadHotels", "Uploaded: " + docId))
+                        .addOnFailureListener(e -> Log.e("UploadHotels", "Failed: " + docId, e));
+
+                total++;
+            }
+
+            Toast.makeText(context, "Đã bắt đầu upload " + total + " khách sạn", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Log.e("UploadHotels", "Lỗi khi upload", e);
+            Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
 }

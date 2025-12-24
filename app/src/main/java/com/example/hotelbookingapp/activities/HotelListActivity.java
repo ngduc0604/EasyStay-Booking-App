@@ -87,7 +87,6 @@ public class HotelListActivity extends AppCompatActivity {
     }
 
     private void fetchHotels(String areaName) {
-
         db.collection("hotels")
                 .whereIn("area",  Arrays.asList(areaName,areaName.toLowerCase()))
                 .get()

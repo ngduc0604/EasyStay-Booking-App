@@ -22,7 +22,7 @@ public class AccountActivity extends AppCompatActivity {
     private Button btnSignOut;
     private FirebaseUser firebaseUser;
     private TextView tvName;
-    private LinearLayout tabSearch,btnAccountSet,tabBooking,tabSaved;
+    private LinearLayout tabSearch,btnAccountSet,tabBooking,tabSaved,btnManagerLocation;
 
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -45,6 +45,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
+
         setupBottomTabs();
         tvName.setText(firebaseUser.getDisplayName());
     }
@@ -66,6 +67,7 @@ public class AccountActivity extends AppCompatActivity {
         tabBooking = bottomNav.findViewById(R.id.tab_booking);
         tabSaved = bottomNav.findViewById(R.id.tab_saved);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        btnManagerLocation= findViewById(R.id.managerlocation);
     }
     private void signOutAll() {
         FirebaseAuth.getInstance().signOut();

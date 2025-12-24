@@ -3,6 +3,7 @@ package com.example.hotelbookingapp.activities;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.example.hotelbookingapp.models.Hotel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.NumberFormat;
@@ -58,7 +60,7 @@ public class BookingActivity extends AppCompatActivity {
 
         String finalUserId = userId;
 
-        btnPlaceBooking.setOnClickListener(v -> saveBookingToFirestore(finalUserId, username));
+        btnPlaceBooking.setOnClickListener(v -> placeBookingWithRoomCheck(finalUserId, username));
     }
 
     private void mappingViews() {
@@ -170,4 +172,73 @@ public class BookingActivity extends AppCompatActivity {
                         Toast.makeText(this, "Đặt phòng thất bại!", Toast.LENGTH_SHORT).show()
                 );
     }
+
+    private void placeBookingWithRoomCheck(String userId, String userName) {
+
+        btnPlaceBooking.setEnabled(false); // tránh double click
+
+        db.runTransaction(transaction -> {
+
+            // 1Lấy document hotel
+            var hotelRef = db.collection("hotels").document(selectedHotel.id);
+            var hotelSnapshot = transaction.get(hotelRef);
+
+            Long availableRooms = hotelSnapshot.getLong("availableRooms");
+
+            // Hết phòng → hủy transaction
+            if (availableRooms == null || availableRooms <= 0) {
+                throw new RuntimeException("Hết phòng");
+            }
+
+            //  Trừ phòng
+            transaction.update(hotelRef, "availableRooms", availableRooms - 1);
+
+            //  Tạo booking
+            CollectionReference bookingsRef = db.collection("bookings");
+            String bookingId = bookingsRef.document().getId();
+
+            Map<String, Object> bookingData = new HashMap<>();
+            bookingData.put("id", bookingId);
+            bookingData.put("hotelId", selectedHotel.id);
+            bookingData.put("hotelName", selectedHotel.name);
+            bookingData.put("address", selectedHotel.address);
+            bookingData.put("dateCheckIn", dateFrom);
+            bookingData.put("dateCheckOut", dateTo);
+            bookingData.put("numberOfNights", numberOfNights);
+            bookingData.put("totalPrice", totalPrice);
+            bookingData.put("userId", userId);
+            bookingData.put("userName", userName);
+            bookingData.put("phone", phone);
+            bookingData.put("status", "confirm");
+            bookingData.put("createdAt", com.google.firebase.Timestamp.now());
+
+            transaction.set(bookingsRef.document(bookingId), bookingData);
+
+            return null;
+
+        }).addOnSuccessListener(aVoid -> {
+            Toast.makeText(this, "Đặt phòng thành công!", Toast.LENGTH_SHORT).show();
+
+            Intent homeIntent = new Intent(this, UserHomeActivity.class);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            Intent historyIntent = new Intent(this, BookingHistoryActivity.class);
+            startActivities(new Intent[]{homeIntent, historyIntent});
+            finish();
+
+        }).addOnFailureListener(e -> {
+            btnPlaceBooking.setEnabled(true);
+            if ("Hết phòng".equals(e.getMessage())) {
+                Toast.makeText(this, "Khách sạn đã hết phòng!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Đặt phòng thất bại!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
+
+
 }

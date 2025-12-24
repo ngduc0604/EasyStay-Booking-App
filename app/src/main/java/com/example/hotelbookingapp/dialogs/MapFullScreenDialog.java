@@ -1,11 +1,16 @@
 package com.example.hotelbookingapp.dialogs;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.*;
 import androidx.annotation.*;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.hotelbookingapp.R;
+import com.example.hotelbookingapp.activities.HotelDetailActivity;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -38,7 +43,6 @@ public class MapFullScreenDialog extends DialogFragment {
         GeoPoint point = new GeoPoint(latitude, longitude);
         mapView.getController().setZoom(15.0);
         mapView.getController().setCenter(point);
-
         Marker marker = new Marker(mapView);
         marker.setPosition(point);
         marker.setTitle(hotelName);

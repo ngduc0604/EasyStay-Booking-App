@@ -58,7 +58,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.tvPrice.setText(format.format(total) + " / " + numberOfNights + " đêm");
         String priceFormatted = format.format(hotel.priceOld*numberOfNights);
         holder.tvOldPrice.setText(priceFormatted);
-        holder.tvNumber.setText("Chỉ còn "+hotel.availableRooms+" phòng");
+
+        if(hotel.availableRooms<=0){
+            holder.tvNumber.setText("Hết phòng");
+        }else{
+            holder.tvNumber.setText("Chỉ còn "+hotel.availableRooms+" phòng");
+        }
         holder.tvOldPrice.setPaintFlags(holder.tvOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         if (hotel.imageUrls != null && !hotel.imageUrls.isEmpty()) {
@@ -67,6 +72,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
                     .placeholder(R.drawable.ic_placeholder)
                     .into(holder.imgHotel);
         }
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, HotelDetailActivity.class);
             intent.putExtra("selected_hotel", hotel);

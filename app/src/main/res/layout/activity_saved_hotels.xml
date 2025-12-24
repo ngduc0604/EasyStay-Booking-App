@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/blue500">
-
         <ImageView
             android:id="@+id/back_to_userhome"
             android:layout_width="25dp"
@@ -21,7 +20,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:id="@+id/tvHeaderTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -62,9 +62,9 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.setApplicationId("1650645932316856");
         FacebookSdk.setClientToken("8da7680f2df20b5db3cea7e1f0e0faa8");
         FacebookSdk.fullyInitialize();
-        // 1. Cấu hình Google Sign-In
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)) // dòng này quan trọng!
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 

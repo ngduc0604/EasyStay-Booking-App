@@ -1,5 +1,6 @@
 package com.example.hotelbookingapp.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -17,10 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.hotelbookingapp.R;
 import com.example.hotelbookingapp.fragments.DatePickerFragment;
 import com.example.hotelbookingapp.models.Area;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,7 +38,7 @@ public class UserHomeActivity extends AppCompatActivity {
             new Area(R.drawable.img_hue, "Huế")
     };
     private LinearLayout layoutLastSearch,continueSearch;
-    private TextView tvLastSearchName,tvLastSearchDate;
+    private TextView tvLastSearchName,tvLastSearchDate,tvOpenMap;
 
     private ImageView imageViewLastSearch;
 
@@ -59,19 +62,21 @@ public class UserHomeActivity extends AppCompatActivity {
         setupBottomTabs();
         setupSearchBox();
         showAreaList();
-
+        tvOpenMap.setOnClickListener(v -> {
+            Intent intent = new Intent(UserHomeActivity.this, MapActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void mapping() {
         scrollView = findViewById(R.id.scroll_content);
         imageContainer = findViewById(R.id.imageContainer);
         tvGenius=findViewById(R.id.tv_genius);
-        View bottomNav = findViewById(R.id.layout_bottom_nav); // lấy include bottom nav
+        View bottomNav = findViewById(R.id.layout_bottom_nav);
         tabSearch = bottomNav.findViewById(R.id.tab_search);
         tabSaved = bottomNav.findViewById(R.id.tab_saved);
         tabBooking = bottomNav.findViewById(R.id.tab_booking);
         tabAccount = bottomNav.findViewById(R.id.tab_account);
-
         View searchBox = findViewById(R.id.searchBox);
         etLocation = searchBox.findViewById(R.id.et_location);
         tvDateFrom = searchBox.findViewById(R.id.tv_date_from);
@@ -84,6 +89,7 @@ public class UserHomeActivity extends AppCompatActivity {
         tvLastSearchName=findViewById(R.id.tv_last_search_name);
         tvLastSearchDate=findViewById(R.id.tv_last_search_date);
         imageViewLastSearch=findViewById(R.id.image_last_search);
+        tvOpenMap=findViewById(R.id.open_Map_2);
 
     }
 
@@ -216,19 +222,77 @@ private void setupSearchBox() {
         String lastFrom = getSharedPreferences("SEARCH_PREF", MODE_PRIVATE).getString("last_date_from", "");
         String lastTo = getSharedPreferences("SEARCH_PREF", MODE_PRIVATE).getString("last_date_to", "");
 
+        //Lay ngay thang hien tai
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+
+        // Ngày mai
+        Calendar tomorrow = (Calendar) today.clone();
+        tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+
+        String todayStr = String.format("%02d/%02d/%04d", today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR));
+        String tomorrowStr = String.format("%02d/%02d/%04d", tomorrow.get(Calendar.DAY_OF_MONTH), tomorrow.get(Calendar.MONTH) + 1, tomorrow.get(Calendar.YEAR));
+
+        boolean datesAreInvalid = false;
+        if (!lastFrom.isEmpty() && !lastTo.isEmpty()) {
+            try {
+                // Chuyển đổi chuỗi ngày tháng (dd/MM/yyyy) thành đối tượng Calendar để so sánh
+                String[] parts = lastFrom.split("/");
+                Calendar lastDateFromCal = Calendar.getInstance();
+                lastDateFromCal.set(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]) - 1, Integer.parseInt(parts[0]));
+
+                // Nếu ngày đến đã lưu nhỏ hơn ngày hôm nay (tức là đã qua)
+                if (lastDateFromCal.before(today)) {
+                    datesAreInvalid = true;
+                }
+            } catch (Exception e) {
+                // Xử lý lỗi nếu chuỗi ngày tháng bị hỏng (format sai)
+                datesAreInvalid = true;
+            }
+        } else if (!lastFrom.isEmpty() || !lastTo.isEmpty()) {
+            // Nếu chỉ có 1 trong 2 ngày được lưu (dữ liệu không đầy đủ)
+            datesAreInvalid = true;
+        }
+        if (datesAreInvalid) {
+            // Mặc định ngày đến là hôm nay và ngày đi là ngày mai
+            dateFrom = todayStr;
+            dateTo = tomorrowStr;
+
+            // Cập nhật lại SharedPreferences để lần sau không cần reset nữa
+            getSharedPreferences("SEARCH_PREF", MODE_PRIVATE)
+                    .edit()
+                    .putString("last_date_from", dateFrom)
+                    .putString("last_date_to", dateTo)
+                    .apply();
+
+            // Hiển thị thông báo cho người dùng (Tùy chọn)
+            Toast.makeText(this, "Ngày tìm kiếm cũ đã hết hạn, đã đặt lại ngày hôm nay và ngày mai.", Toast.LENGTH_LONG).show();
+
+        } else {
+            // Nếu ngày tháng hợp lệ, sử dụng ngày tháng đã đọc
+            dateFrom = lastFrom;
+            dateTo = lastTo;
+        }
+
+        tvDateFrom.setText(dateFrom);
+        tvDateTo.setText(dateTo);
+
         if (!lastArea.isEmpty()) {
             etLocation.setText(lastArea);
         }
 
-        if (!lastFrom.isEmpty()) {
-            dateFrom = lastFrom;
-            tvDateFrom.setText(dateFrom);
-        }
+//        if (!lastFrom.isEmpty()) {
+//            dateFrom = lastFrom;
+//            tvDateFrom.setText(dateFrom);
+//        }
 
-        if (!lastTo.isEmpty()) {
-            dateTo = lastTo;
-            tvDateTo.setText(dateTo);
-        }
+//        if (!lastTo.isEmpty()) {
+//            dateTo = lastTo;
+//            tvDateTo.setText(dateTo);
+//        }
         if (!lastArea.isEmpty() && !lastFrom.isEmpty() && !lastTo.isEmpty()) {
             layoutLastSearch.setVisibility(View.VISIBLE);
             tvLastSearchName.setText(lastArea.toUpperCase());

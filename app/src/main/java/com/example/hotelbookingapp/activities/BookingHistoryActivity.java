@@ -115,8 +115,6 @@ public class BookingHistoryActivity extends AppCompatActivity {
                         booking.setStatus(snapshot.getString("status"));
                         allBookings.add(booking);
                     }
-
-
                     filterBookingsByStatus("confirm");
                 });
     }

@@ -4,7 +4,6 @@ package com.example.hotelbookingapp.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,8 +18,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -183,20 +183,20 @@ public class BookingDetailActivity extends AppCompatActivity {
         btnDanhGia=findViewById(R.id.btn_danhgia);
     }
 
-    private void CancelBooking(){
-        db.collection("bookings").document(bookingId)
-                .update("status", "cancel")
-                .addOnSuccessListener(unused -> {
-                    Toast.makeText(BookingDetailActivity.this, "Đã hủy đặt phòng", Toast.LENGTH_SHORT).show();
-                    btnCancel.setEnabled(false);
-                    Intent intent=new Intent(BookingDetailActivity.this,BookingHistoryActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // xóa stack
-                    startActivity(intent);
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(BookingDetailActivity.this, "Lỗi khi hủy đặt phòng", Toast.LENGTH_SHORT).show();
-                });
-    }
+//    private void CancelBooking(){
+//        db.collection("bookings").document(bookingId)
+//                .update("status", "cancel")
+//                .addOnSuccessListener(unused -> {
+//                    Toast.makeText(BookingDetailActivity.this, "Đã hủy đặt phòng", Toast.LENGTH_SHORT).show();
+//                    btnCancel.setEnabled(false);
+//                    Intent intent=new Intent(BookingDetailActivity.this,BookingHistoryActivity.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // xóa stack
+//                    startActivity(intent);
+//                })
+//                .addOnFailureListener(e -> {
+//                    Toast.makeText(BookingDetailActivity.this, "Lỗi khi hủy đặt phòng", Toast.LENGTH_SHORT).show();
+//                });
+//    }
 
     private void ShowCancelDialog(){
         new MaterialAlertDialogBuilder(this)
@@ -272,6 +272,41 @@ public class BookingDetailActivity extends AppCompatActivity {
         if (btnDanhGia.getVisibility() == View.VISIBLE) {
             checkExistingReviewAndSetup(bookingId);
         }
+    }
+
+    private void CancelBooking() {
+        db.runTransaction(transaction -> {
+            DocumentReference bookingRef = db.collection("bookings").document(bookingId);
+            DocumentSnapshot bookingSnap = transaction.get(bookingRef);
+
+            if (!bookingSnap.exists()) return null;
+
+            String status = bookingSnap.getString("status");
+            if (!"confirm".equals(status)) {
+                // Chỉ cho hủy khi đang confirm
+                return null;
+            }
+
+            String hotelId = bookingSnap.getString("hotelId");
+            if (hotelId == null) return null;
+
+            DocumentReference hotelRef = db.collection("hotels").document(hotelId);
+            DocumentSnapshot hotelSnap = transaction.get(hotelRef);
+
+            Long availableRooms = hotelSnap.getLong("availableRooms");
+            if (availableRooms == null) availableRooms = 0L;
+
+            transaction.update(bookingRef, "status", "cancel");
+            transaction.update(hotelRef, "availableRooms", availableRooms + 1);
+            return null;
+        }).addOnSuccessListener(v -> {
+            Toast.makeText(this, "Đã hủy đặt phòng", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, BookingHistoryActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
+        }).addOnFailureListener(e ->
+                Toast.makeText(this, "Hủy đặt phòng thất bại", Toast.LENGTH_SHORT).show()
+        );
     }
 
 

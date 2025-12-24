@@ -1,6 +1,10 @@
 package com.example.hotelbookingapp.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +19,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,7 +50,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HotelDetailActivity extends AppCompatActivity {
-    //private FrameLayout mapContainer;
     private View mapOverlay;
     private TextView tvHotelName, tvRating, tvStars, tvAddress, tvDescription,tvcheckIn,tvcheckOut,tvOfNight,tvPrice;
     private ImageView btnBack,btnHeart,btnShare;
@@ -98,7 +102,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         btnSelectRoom.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() == null) {
                 Toast.makeText(this, "Vui lòng đăng nhập để sử dụng chức năng này", Toast.LENGTH_SHORT).show();
-                new Intent(this, LoginActivity.class);
+                startActivity(new Intent(this, LoginActivity.class));
                 return;
             }
             Hotel selectedHotel = getIntent().getSerializableExtra("selected_hotel") != null ?
@@ -107,6 +111,11 @@ public class HotelDetailActivity extends AppCompatActivity {
 //            String dateTo = getIntent().getStringExtra("date_to");
             if (selectedHotel == null) {
                 Toast.makeText(this, "Không tìm thấy thông tin khách sạn", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (selectedHotel.availableRooms <= 0) {
+                Toast.makeText(this, "Khách sạn không còn phòng trống, bạn hãy quay lại sau nhé", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -172,8 +181,6 @@ public class HotelDetailActivity extends AppCompatActivity {
 
             datePickerFragment.show(getSupportFragmentManager(), "checkOutPicker");
         });
-
-
     }
 
     private void mappingViews() {
@@ -186,7 +193,6 @@ public class HotelDetailActivity extends AppCompatActivity {
         mapView = findViewById(R.id.imgMap);
         btnSelectRoom = findViewById(R.id.btnSelectRoom);
         gridPhotos = findViewById(R.id.gridPhotos);
-       // mapContainer = findViewById(R.id.mapContainer);
         mapOverlay = findViewById(R.id.mapOverlay);
         tvcheckIn=findViewById(R.id.tvCheckIn);
         tvcheckOut=findViewById(R.id.tvCheckOut);
@@ -204,6 +210,15 @@ public class HotelDetailActivity extends AppCompatActivity {
     }
 
     private void populateHotelInfo(Hotel hotel) {
+
+        if (hotel.availableRooms <= 0) {
+            btnSelectRoom.setEnabled(false);
+            btnSelectRoom.setText("Hết phòng");
+            btnSelectRoom.setAlpha(0.6f);
+            btnSelectRoom.setTextColor(Color.WHITE);
+        }
+
+
         tvHotelName.setText(hotel.name);
         tvRating.setText(String.valueOf(hotel.rating));
         tvStars.setText(hotel.stars + " ★");
@@ -269,6 +284,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         mapView.getController().setZoom(15.0);
         mapView.getController().setCenter(hotelLocation);
 
+
         Marker marker = new Marker(mapView);
         marker.setPosition(hotelLocation);
         marker.setTitle(hotel.name);
@@ -279,7 +295,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         db.collection("ReviewHotel")
                 .whereEqualTo("hotelid", hotelId)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(PREVIEW_LIMIT + 1) // lấy dư 1 để biết có “xem thêm” không
+                .limit(PREVIEW_LIMIT + 1) //
                 .get()
                 .addOnSuccessListener(snap -> {
                     List<Review> list = new ArrayList<>();
@@ -300,16 +316,13 @@ public class HotelDetailActivity extends AppCompatActivity {
                     reviewAdapter.setItems(list);
                     tvSeeMoreReviews.setVisibility(hasMore ? View.VISIBLE : View.GONE);
 
-                    // Nếu không có review nào, có thể ẩn cả header + link (tuỳ UX)
+                    // Nếu không có review nào, ẩn cả header
                     if (list.isEmpty()) {
                         tvSeeMoreReviews.setVisibility(View.GONE);
-                        // Ví dụ: ẩn header nếu muốn
                          findViewById(R.id.tvReviewsHeader).setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Giữ im lặng hoặc log nhẹ để debug
-                    // Log.e("HotelDetail", "loadPreviewReviews error", e);
                     reviewAdapter.setItems(new ArrayList<>());
                     tvSeeMoreReviews.setVisibility(View.GONE);
                 });

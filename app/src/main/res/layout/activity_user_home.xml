@@ -41,6 +41,68 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <include layout="@layout/search_box" android:id="@+id/searchBox"></include>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <!-- Tiêu đề ưu đãi -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Khách sạn gần đây"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:layout_marginBottom="10dp" />
+                <!-- Khung ưu đãi -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_offer_box"
+                    android:elevation="2dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical">
+                    <!-- Nội dung text -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Khám phá những chỗ nghỉ gần bạn"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+                        <TextView
+                            android:id="@+id/open_Map_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Khám phá ngay"
+                            android:textSize="14sp"
+                            android:textColor="#007bff"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
+                    <!-- Ảnh -->
+                    <ImageView
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:src="@drawable/ic_map_2"
+                        android:scaleType="centerCrop"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/bg_image_rounded"
+                        android:clipToOutline="true"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
             <TextView
                 android:textColor="#000000"
                 android:layout_width="wrap_content"
@@ -282,7 +344,6 @@
                             android:textStyle="bold"
                             android:layout_marginTop="8dp" />
                     </LinearLayout>
-
                     <!-- Ảnh -->
                     <ImageView
                         android:layout_width="72dp"

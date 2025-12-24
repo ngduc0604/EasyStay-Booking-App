@@ -12,7 +12,13 @@ public class Hotel implements Serializable {
     public List<String> imageUrls;
     public double latitude;
     public double longitude;
+
     public Hotel() {}
+    public Hotel(String name, double latitude, double longitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     public String getArea() {
         return area;

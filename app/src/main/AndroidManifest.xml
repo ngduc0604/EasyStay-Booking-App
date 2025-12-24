@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelBookingApp">
+
+        <activity
+            android:name=".activities.MapActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.ReviewHotelActivity"
             android:exported="false" />
@@ -23,6 +29,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -48,6 +55,7 @@
         <activity android:name=".activities.BookingHistoryActivity" />
         <activity android:name=".activities.BookingDetailActivity" />
         <activity android:name=".activities.ReviewsActivity" />
+
     </application>
 
 </manifest>

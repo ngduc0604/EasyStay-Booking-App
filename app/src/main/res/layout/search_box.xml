@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@drawable/search_border"
@@ -73,16 +74,15 @@
             android:background="@drawable/search_border"
             android:paddingStart="12dp" />
     </LinearLayout>
-
-    <!-- Nút Tìm -->
-    <Button
-        android:id="@+id/btn_search"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:text="Tìm"
-        android:backgroundTint="@color/blue500"
-        android:textColor="@android:color/white"
-        android:textAllCaps="false"
-        android:textSize="16sp" />
+        <!-- Nút Tìm -->
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="match_parent"
+            android:layout_weight="2"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:text="Tìm"
+            android:backgroundTint="@color/blue500"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 </LinearLayout>
